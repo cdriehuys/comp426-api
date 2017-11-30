@@ -1,0 +1,9 @@
+---
+- name: ANXS.postgresql
+  version: v1.9.0
+
+- name: cdriehuys.django-app
+  version: v1.1.1
+
+- name: cdriehuys.nginx
+  version: v0.1

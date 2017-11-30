@@ -1,0 +1,13 @@
+---
+postgresql_users:
+  - name: "{{ db_user }}"
+    pass: "{{ db_password }}"
+
+postgresql_databases:
+  - name: "{{ db_name }}"
+    owner: "{{ db_user }}"
+
+postgresql_user_privileges:
+  - name: "{{ db_user }}"
+    db: "{{ db_name }}"
+    priv: ALL

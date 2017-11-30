@@ -1,0 +1,12 @@
+---
+- hosts: dbservers
+
+  become: yes
+  remote_user: ansible
+
+  vars_files:
+    - env_vars/base.yml
+    - env_vars/{{ env }}-vault.yml
+
+  roles:
+    - ANXS.postgresql
