@@ -99,3 +99,13 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# Sublime Text Files
+*.sublime-project
+*.sublime-workspace
+
+# Local Database
+*.sqlite3
+
+# Failed Ansible Logs
+*.retry

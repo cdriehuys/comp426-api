@@ -1,0 +1,8 @@
+[dbservers]
+api.ultimanager.com
+
+[webservers]
+api.ultimanager.com
+
+[all:vars]
+env = prod

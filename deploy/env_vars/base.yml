@@ -1,0 +1,4 @@
+---
+db_name: comp426
+db_user: django
+db_password: "{{ vault_db_password }}"
