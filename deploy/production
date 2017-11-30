@@ -2,7 +2,7 @@
 api.ultimanager.com
 
 [webservers]
-dev.api.ultimanager.com
+api.ultimanager.com
 
 [all:vars]
 env = prod

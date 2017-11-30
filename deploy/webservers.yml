@@ -12,4 +12,5 @@
 
   roles:
     - cdriehuys.django-app
+    - letsencrypt
     - cdriehuys.nginx
