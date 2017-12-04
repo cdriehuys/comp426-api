@@ -11,8 +11,12 @@ class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         extra_kwargs = {
             'password': {
+                'help_text': "The user's password.",
                 'style': {'input_type': 'password'},
                 'write_only': True,
+            },
+            'username': {
+                'help_text': "The user's username.",
             },
         }
         fields = ('username', 'password')

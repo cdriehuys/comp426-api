@@ -17,10 +17,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.documentation import include_docs_urls
 
 
 urlpatterns = [
     url(r'^account/', include('account.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^auth/login/$', obtain_auth_token),
+    url(r'^docs/', include_docs_urls('UltiManager API')),
 ]
