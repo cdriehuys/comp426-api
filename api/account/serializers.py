@@ -3,6 +3,21 @@ from django.contrib.auth import get_user_model, password_validation
 from rest_framework import serializers
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializer for a user's profile.
+    """
+
+    class Meta:
+        extra_kwargs = {
+            'username': {
+                'help_text': "The user's username.",
+            },
+        }
+        fields = ('id', 'username')
+        model = get_user_model()
+
+
 class RegistrationSerializer(serializers.ModelSerializer):
     """
     Serializer for registering a new user.

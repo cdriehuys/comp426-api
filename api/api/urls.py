@@ -21,8 +21,29 @@ from rest_framework.documentation import include_docs_urls
 
 
 urlpatterns = [
-    url(r'^account/', include('account.urls')),
-    url(r'^admin/', admin.site.urls),
-    url(r'^auth/login/$', obtain_auth_token),
-    url(r'^docs/', include_docs_urls('UltiManager API')),
+    url(
+        r'^account/',
+        include('account.urls')
+    ),
+
+    url(
+        r'^admin/',
+        admin.site.urls
+    ),
+
+    # Allows authentication when using the browseable API.
+    url(
+        r'^api-auth/',
+        include('rest_framework.urls', namespace='rest_framework')
+    ),
+
+    url(
+        r'^auth/login/$',
+        obtain_auth_token
+    ),
+
+    url(
+        r'^docs/',
+        include_docs_urls('UltiManager API')
+    ),
 ]
