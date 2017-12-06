@@ -1,4 +1,7 @@
+from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework import viewsets
+from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from ultimanager import models, permissions, serializers
@@ -6,6 +9,8 @@ from ultimanager import models, permissions, serializers
 
 class TeamViewSet(viewsets.ModelViewSet):
     """
+    Collection of views for managing a list of teams.
+
     create:
     Create a new team managed by the current user.
 
@@ -26,6 +31,9 @@ class TeamViewSet(viewsets.ModelViewSet):
     update:
     Update a team's information.
     """
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_fields = ('user',)
+    ordering_fields = ('name', 'user')
     permission_classes = (
         IsAuthenticatedOrReadOnly,
         permissions.IsOwnerOrReadOnly)
