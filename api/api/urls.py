@@ -47,6 +47,11 @@ urlpatterns = [
         r'^docs/',
         include_docs_urls('UltiManager API')
     ),
+
+    url(
+        r'^team-management/',
+        include('ultimanager.urls', namespace='ultimanager')
+    ),
 ]
 
 
