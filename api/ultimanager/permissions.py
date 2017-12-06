@@ -18,3 +18,20 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         # It's a write method, so the requesting user must be the
         # object's owner.
         return request.user == obj.user
+
+
+class IsPlayerManagerOrReadOnly(permissions.BasePermission):
+    """
+    Permission that only allows write operations on players if the
+    requesting user manages the team that the player is a part of.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Only allow access to the view if the request method is read-only
+        or the requesting user manages the player being accessed.
+        """
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return request.user == obj.team.user

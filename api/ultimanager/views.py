@@ -1,10 +1,70 @@
+from django.shortcuts import get_object_or_404
+
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import viewsets
+from rest_framework import generics, viewsets
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from ultimanager import models, permissions, serializers
+
+
+class PlayerDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    destroy:
+    Delete the player with the specified ID.
+
+    partial_update:
+    Partially update a specific player's information.
+
+    retrieve:
+    Retrieve the details of a specific player.
+
+    update:
+    Update a specific player's information.
+    """
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsPlayerManagerOrReadOnly)
+    queryset = models.Player.objects.all()
+    serializer_class = serializers.PlayerSerializer
+
+
+class PlayerListView(generics.ListCreateAPIView):
+    """
+    create:
+    Create a new player.
+
+    The player will be assigned to the team whose ID is given in the
+    URL.
+
+    list:
+    List the players on the team whose ID is given in the URL.
+    """
+    filter_backends = (OrderingFilter,)
+    ordering = ('name',)
+    ordering_fields = ('name', 'number')
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsPlayerManagerOrReadOnly)
+    serializer_class = serializers.PlayerSerializer
+
+    def get_queryset(self):
+        """
+        Return the players who belong to the team whose ID is given in
+        the URL of the request.
+        """
+        team = get_object_or_404(models.Team, pk=self.kwargs.get('pk'))
+
+        return team.players.all()
+
+    def perform_create(self, serializer):
+        """
+        Associate the newly created player with the current team.
+        """
+        team = get_object_or_404(models.Team, pk=self.kwargs.get('pk'))
+
+        return serializer.save(team=team)
 
 
 class TeamViewSet(viewsets.ModelViewSet):
