@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Default Django Apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,9 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Third Party Apps
     'corsheaders',
+    'crispy_forms',
+    'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
+
+    # Custom Apps
+    'account',
+    'ultimanager',
 ]
 
 MIDDLEWARE = [
@@ -123,6 +131,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Media Files (User Uploaded)
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 
 # CORS Configuration

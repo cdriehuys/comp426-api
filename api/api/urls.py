@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 
@@ -46,4 +47,19 @@ urlpatterns = [
         r'^docs/',
         include_docs_urls('UltiManager API')
     ),
+
+    url(
+        r'^team-management/',
+        include('ultimanager.urls', namespace='ultimanager')
+    ),
 ]
+
+
+# If we are in development, have Django serve media files. Normally
+# these files are served by the webserver (NGINX).
+if settings.DEBUG:
+    from django.conf.urls.static import static
+
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT)

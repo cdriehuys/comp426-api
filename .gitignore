@@ -109,3 +109,6 @@ ENV/
 
 # Failed Ansible Logs
 *.retry
+
+# Uploaded Media Files
+api/media/
