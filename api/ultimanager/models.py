@@ -6,6 +6,33 @@ from django.conf import settings
 from django.db import models
 
 
+class Player(models.Model):
+    """
+    A player is a member of a team.
+    """
+    name = models.CharField(
+        help_text="The player's name.",
+        max_length=255)
+    number = models.PositiveSmallIntegerField(
+        help_text="The player's number.")
+    team = models.ForeignKey(
+        'ultimanager.Team',
+        help_text="The team that the player belongs to.",
+        on_delete=models.CASCADE,
+        related_name='players',
+        related_query_name='player')
+
+    class Meta:
+        verbose_name = 'player'
+        verbose_name_plural = 'players'
+
+    def __str__(self):
+        """
+        Get a string representation of the player.
+        """
+        return self.name
+
+
 class Team(models.Model):
     """
     A team is a collection of players managed by a user. A team can play
