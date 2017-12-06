@@ -7,7 +7,9 @@ app_package: api
 app_repo: 'https://github.com/cdriehuys/comp426-api'
 
 app_required_packages:
+  - libjpeg-turbo8
   - libpq-dev
+  - zlib1g
 
 django_requirements: "{{ django_project }}/requirements/production.txt"
 django_secret_key: "{{ vault_django_secret_key }}"
@@ -44,6 +46,9 @@ nginx_site_servers:
   - listen: 443 ssl http2
     name: "{{ inventory_hostname }}"
     extra_params: |
+          # Allow upload of large pictures
+          client_max_body_size 5M;
+
           ssl_certificate {{ letsencrypt_live_dir }}/fullchain.pem;
           ssl_certificate_key {{ letsencrypt_live_dir }}/privkey.pem;
 
@@ -70,6 +75,10 @@ nginx_site_servers:
 
           location = /favicon.ico {
             access_log off;
+          }
+
+          location /media/ {
+            alias {{ django_media_root }}/;
           }
 
           location /static/ {
