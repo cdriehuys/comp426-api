@@ -196,3 +196,35 @@ class TeamViewSet(viewsets.ModelViewSet):
         Include the requesting user when creating a new team.
         """
         return serializer.save(user=self.request.user)
+
+
+class ThrowDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsThrowManagerOrReadOnly)
+    queryset = models.Throw.objects.all()
+    serializer_class = serializers.ThrowSerializer
+
+
+class ThrowListView(generics.ListCreateAPIView):
+    filter_backends = (OrderingFilter,)
+    ordering = ('id',)
+    ordering_fields = ('id',)
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsThrowManagerOrReadOnly)
+    serializer_class = serializers.ThrowSerializer
+
+    def get_queryset(self):
+        possession = get_object_or_404(
+            models.Possession,
+            pk=self.kwargs.get('pk'))
+
+        return possession.throws.all()
+
+    def perform_create(self, serializer):
+        possession = get_object_or_404(
+            models.Possession,
+            pk=self.kwargs.get('pk'))
+
+        return serializer.save(possession=possession)

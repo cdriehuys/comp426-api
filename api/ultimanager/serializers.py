@@ -48,3 +48,12 @@ class TeamSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'user', 'image')
         model = models.Team
         read_only_fields = ('user',)
+
+
+class ThrowSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id', 'possession', 'thrower', 'receiver', 'throw_type', 'result'
+        )
+        model = models.Throw
+        read_only_fields = ('possession',)

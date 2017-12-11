@@ -47,6 +47,12 @@ urlpatterns = [
     ),
 
     url(
+        r'^possessions/(?P<pk>[0-9]+)/throws/$',
+        views.ThrowListView.as_view(),
+        name='throw-list'
+    ),
+
+    url(
         r'^teams/(?P<pk>[0-9]+)/games/$',
         views.GameListView.as_view(),
         name='game-list'
@@ -56,6 +62,12 @@ urlpatterns = [
         r'^teams/(?P<pk>[0-9]+)/players/$',
         views.PlayerListView.as_view(),
         name='player-list'
+    ),
+
+    url(
+        r'^throws/(?P<pk>[0-9]+)/$',
+        views.ThrowDetailView.as_view(),
+        name='throw-detail',
     ),
 
     # Fallback to URLs from the router
