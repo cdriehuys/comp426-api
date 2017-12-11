@@ -23,6 +23,15 @@ class PlayerAdmin(admin.ModelAdmin):
     search_fields = ('name', 'number', 'team')
 
 
+@admin.register(models.Point)
+class PointAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the `Point` model.
+    """
+    fields = ('game', 'starting_position', 'status', 'players')
+    list_display = ('game', 'status', 'starting_position')
+
+
 @admin.register(models.Team)
 class TeamAdmin(admin.ModelAdmin):
     """

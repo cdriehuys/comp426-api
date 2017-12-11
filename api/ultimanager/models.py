@@ -6,26 +6,29 @@ from django.conf import settings
 from django.db import models
 
 
+class GamePosition:
+    """
+    Holds constants for referencing game positions.
+    """
+    DEFENSE = 'D'
+    OFFENSE = 'O'
+
+    CHOICES = (
+        (DEFENSE, 'Defense'),
+        (OFFENSE, 'Offense'),
+    )
+
+
 class Game(models.Model):
     """
     A game contains all the information about a match against an
     opposing team.
     """
-    # Game position constants
-    DEFENSE = 'O'
-    OFFENSE = 'D'
-
-    POSITION_CHOICES = (
-        (DEFENSE, 'Defense'),
-        (OFFENSE, 'Offense'),
-    )
-
-    # Fields
     opponent = models.CharField(
         help_text="The name of the opposing team.",
         max_length=255)
     starting_position = models.CharField(
-        choices=POSITION_CHOICES,
+        choices=GamePosition.CHOICES,
         help_text="The position that the home team started the game on.",
         max_length=1)
     team = models.ForeignKey(
@@ -69,6 +72,55 @@ class Player(models.Model):
         Get a string representation of the player.
         """
         return self.name
+
+
+class Point(models.Model):
+    """
+    A single point of a game.
+    """
+    IN_PROGRESS = 'P'
+    HOME_SCORED = 'H'
+    OPPONENT_SCORED = 'O'
+
+    STATUS_CHOICES = (
+        (IN_PROGRESS, 'In Progress'),
+        (HOME_SCORED, 'Home Team Scored'),
+        (OPPONENT_SCORED, 'Opposing Team Scored'),
+    )
+
+    # Fields
+    game = models.ForeignKey(
+        'ultimanager.Game',
+        help_text="The game that the point is a part of.",
+        on_delete=models.CASCADE,
+        related_name='points',
+        related_query_name='point')
+    players = models.ManyToManyField(
+        'ultimanager.Player',
+        help_text="The players that played the point.",
+        related_name='points',
+        related_query_name='point')
+    starting_position = models.CharField(
+        choices=GamePosition.CHOICES,
+        help_text="The position that the home team is starting the point on.",
+        max_length=1)
+    status = models.CharField(
+        choices=STATUS_CHOICES,
+        help_text=("The state that the point is in. If the point is complete, "
+                   "this field tracks which team scored."),
+        max_length=1)
+
+    class Meta:
+        verbose_name = 'point'
+        verbose_name_plural = 'points'
+
+    def __str__(self):
+        """
+        Get a string representation of the instance.
+        """
+        return "Point in {home} vs. {away}".format(
+            away=self.game.opponent,
+            home=self.game.team.name)
 
 
 class Team(models.Model):
