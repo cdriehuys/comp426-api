@@ -9,7 +9,10 @@ class GameSerializer(serializers.ModelSerializer):
     """
 
     class Meta:
-        fields = ('id', 'team', 'opponent', 'starting_position')
+        fields = (
+            'id', 'team', 'opponent', 'starting_position', 'home_points',
+            'opponent_points'
+        )
         model = models.Game
         read_only_fields = ('team',)
 

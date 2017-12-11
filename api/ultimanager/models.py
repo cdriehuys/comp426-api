@@ -46,6 +46,14 @@ class Game(models.Model):
             away=self.opponent,
             home=self.team.name)
 
+    @property
+    def home_points(self):
+        return self.points.filter(status=Point.HOME_SCORED).count()
+
+    @property
+    def opponent_points(self):
+        return self.points.filter(status=Point.OPPONENT_SCORED).count()
+
 
 class Player(models.Model):
     """
