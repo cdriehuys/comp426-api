@@ -9,6 +9,41 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from ultimanager import models, permissions, serializers
 
 
+class GameDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsGameManagerOrReadOnly)
+    queryset = models.Game.objects.all()
+    serializer_class = serializers.GameSerializer
+
+
+class GameListView(generics.ListCreateAPIView):
+    """
+    create:
+    Create a new game.
+
+    list:
+    List the games tracked by the team whose ID is given in the URL.
+    """
+    filter_backends = (OrderingFilter,)
+    ordering = ('opponent',)
+    ordering_fields = ('opponent',)
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsGameManagerOrReadOnly)
+    serializer_class = serializers.GameSerializer
+
+    def get_queryset(self):
+        team = get_object_or_404(models.Team, pk=self.kwargs.get('pk'))
+
+        return team.games.all()
+
+    def perform_create(self, serializer):
+        team = get_object_or_404(models.Team, pk=self.kwargs.get('pk'))
+
+        return serializer.save(team=team)
+
+
 class PlayerDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     destroy:
@@ -67,6 +102,62 @@ class PlayerListView(generics.ListCreateAPIView):
         return serializer.save(team=team)
 
 
+class PointDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsPointManagerOrReadOnly)
+    queryset = models.Point.objects.all()
+    serializer_class = serializers.PointSerializer
+
+
+class PointListView(generics.ListCreateAPIView):
+    filter_backends = (OrderingFilter,)
+    ordering = ('id',)
+    ordering_fields = ('id',)
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsPointManagerOrReadOnly)
+    serializer_class = serializers.PointSerializer
+
+    def get_queryset(self):
+        game = get_object_or_404(models.Game, pk=self.kwargs.get('pk'))
+
+        return game.points.all()
+
+    def perform_create(self, serializer):
+        game = get_object_or_404(models.Game, pk=self.kwargs.get('pk'))
+
+        return serializer.save(game=game)
+
+
+class PossessionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsPossessionManagerOrReadOnly)
+    queryset = models.Possession.objects.all()
+    serializer_class = serializers.PossessionSerializer
+
+
+class PossessionListView(generics.ListCreateAPIView):
+    filter_backends = (OrderingFilter,)
+    ordering = ('id',)
+    ordering_fields = ('id',)
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsPossessionManagerOrReadOnly)
+    serializer_class = serializers.PossessionSerializer
+
+    def get_queryset(self):
+        point = get_object_or_404(models.Point, pk=self.kwargs.get('pk'))
+
+        return point.possessions.all()
+
+    def perform_create(self, serializer):
+        point = get_object_or_404(models.Point, pk=self.kwargs.get('pk'))
+
+        return serializer.save(point=point)
+
+
 class TeamViewSet(viewsets.ModelViewSet):
     """
     Collection of views for managing a list of teams.
@@ -105,3 +196,35 @@ class TeamViewSet(viewsets.ModelViewSet):
         Include the requesting user when creating a new team.
         """
         return serializer.save(user=self.request.user)
+
+
+class ThrowDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsThrowManagerOrReadOnly)
+    queryset = models.Throw.objects.all()
+    serializer_class = serializers.ThrowSerializer
+
+
+class ThrowListView(generics.ListCreateAPIView):
+    filter_backends = (OrderingFilter,)
+    ordering = ('id',)
+    ordering_fields = ('id',)
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsThrowManagerOrReadOnly)
+    serializer_class = serializers.ThrowSerializer
+
+    def get_queryset(self):
+        possession = get_object_or_404(
+            models.Possession,
+            pk=self.kwargs.get('pk'))
+
+        return possession.throws.all()
+
+    def perform_create(self, serializer):
+        possession = get_object_or_404(
+            models.Possession,
+            pk=self.kwargs.get('pk'))
+
+        return serializer.save(possession=possession)
