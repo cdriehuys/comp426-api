@@ -48,7 +48,10 @@ class TeamSerializer(serializers.ModelSerializer):
     """
 
     class Meta:
-        fields = ('id', 'name', 'user', 'image')
+        fields = (
+            'id', 'name', 'user', 'image', 'games_lost', 'games_won',
+            'num_games'
+        )
         model = models.Team
         read_only_fields = ('user',)
 

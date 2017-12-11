@@ -244,6 +244,36 @@ class Team(models.Model):
         """
         return self.name
 
+    @property
+    def games_lost(self):
+        lost = 0
+        for game in Game.objects.filter(team=self):
+            points_won = game.points.filter(status=Point.HOME_SCORED).count()
+            points_lost = game.points.filter(
+                status=Point.OPPONENT_SCORED).count()
+
+            if points_won < points_lost:
+                lost += 1
+
+        return lost
+
+    @property
+    def games_won(self):
+        won = 0
+        for game in Game.objects.filter(team=self):
+            points_won = game.points.filter(status=Point.HOME_SCORED).count()
+            points_lost = game.points.filter(
+                status=Point.OPPONENT_SCORED).count()
+
+            if points_won > points_lost:
+                won += 1
+
+        return won
+
+    @property
+    def num_games(self):
+        return self.games.count()
+
 
 class Throw(models.Model):
     """
