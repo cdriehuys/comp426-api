@@ -57,3 +57,10 @@ class ThrowSerializer(serializers.ModelSerializer):
         )
         model = models.Throw
         read_only_fields = ('possession',)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.instance.result == models.Throw.GOAL:
+            self.instance.possession.point.status = models.Point.HOME_SCORED
+            self.instance.possession.point.save()
