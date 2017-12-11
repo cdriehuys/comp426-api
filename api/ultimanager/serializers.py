@@ -9,7 +9,10 @@ class GameSerializer(serializers.ModelSerializer):
     """
 
     class Meta:
-        fields = ('id', 'team', 'opponent', 'starting_position')
+        fields = (
+            'id', 'team', 'opponent', 'starting_position', 'home_points',
+            'opponent_points'
+        )
         model = models.Game
         read_only_fields = ('team',)
 
@@ -18,9 +21,12 @@ class PlayerSerializer(serializers.ModelSerializer):
     """
     Serializer for the `Player` model.
     """
-
     class Meta:
-        fields = ('id', 'name', 'number', 'team')
+        fields = (
+            'id', 'name', 'number', 'team', 'num_throws', 'num_completions',
+            'completion_percentage', 'num_turns', 'num_points', 'num_games',
+            'avg_completions_per_point', 'avg_points_per_game'
+        )
         model = models.Player
         read_only_fields = ('team',)
 
@@ -45,7 +51,10 @@ class TeamSerializer(serializers.ModelSerializer):
     """
 
     class Meta:
-        fields = ('id', 'name', 'user', 'image')
+        fields = (
+            'id', 'name', 'user', 'image', 'games_lost', 'games_won',
+            'num_games'
+        )
         model = models.Team
         read_only_fields = ('user',)
 

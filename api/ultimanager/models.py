@@ -46,6 +46,14 @@ class Game(models.Model):
             away=self.opponent,
             home=self.team.name)
 
+    @property
+    def home_points(self):
+        return self.points.filter(status=Point.HOME_SCORED).count()
+
+    @property
+    def opponent_points(self):
+        return self.points.filter(status=Point.OPPONENT_SCORED).count()
+
 
 class Player(models.Model):
     """
@@ -72,6 +80,52 @@ class Player(models.Model):
         Get a string representation of the player.
         """
         return self.name
+
+    @property
+    def num_completions(self):
+        return Throw.objects.exclude(
+            result=Throw.TURNOVER).filter(
+            thrower=self).count()
+
+    @property
+    def num_throws(self):
+        return Throw.objects.filter(thrower=self).count()
+
+    @property
+    def num_turns(self):
+        return Throw.objects.filter(
+            thrower=self,
+            result=Throw.TURNOVER).count()
+
+    @property
+    def num_points(self):
+        return Point.objects.filter(players=self).count()
+
+    @property
+    def num_games(self):
+        return Game.objects.filter(
+            point__players=self).count()
+
+    @property
+    def avg_completions_per_point(self):
+        if self.num_points == 0:
+            return 0
+
+        return self.num_completions / self.num_points
+
+    @property
+    def avg_points_per_game(self):
+        if self.num_games == 0:
+            return 0
+
+        return self.num_points / self.num_games
+
+    @property
+    def completion_percentage(self):
+        if self.num_throws == 0:
+            return 0
+
+        return self.num_completions / self.num_throws
 
 
 class Point(models.Model):
@@ -197,6 +251,36 @@ class Team(models.Model):
         Get a string representation of the team.
         """
         return self.name
+
+    @property
+    def games_lost(self):
+        lost = 0
+        for game in Game.objects.filter(team=self):
+            points_won = game.points.filter(status=Point.HOME_SCORED).count()
+            points_lost = game.points.filter(
+                status=Point.OPPONENT_SCORED).count()
+
+            if points_won < points_lost:
+                lost += 1
+
+        return lost
+
+    @property
+    def games_won(self):
+        won = 0
+        for game in Game.objects.filter(team=self):
+            points_won = game.points.filter(status=Point.HOME_SCORED).count()
+            points_lost = game.points.filter(
+                status=Point.OPPONENT_SCORED).count()
+
+            if points_won > points_lost:
+                won += 1
+
+        return won
+
+    @property
+    def num_games(self):
+        return self.games.count()
 
 
 class Throw(models.Model):
