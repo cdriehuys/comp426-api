@@ -9,6 +9,41 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from ultimanager import models, permissions, serializers
 
 
+class GameDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsGameManagerOrReadOnly)
+    queryset = models.Game.objects.all()
+    serializer_class = serializers.GameSerializer
+
+
+class GameListView(generics.ListCreateAPIView):
+    """
+    create:
+    Create a new game.
+
+    list:
+    List the games tracked by the team whose ID is given in the URL.
+    """
+    filter_backends = (OrderingFilter,)
+    ordering = ('opponent',)
+    ordering_fields = ('opponent',)
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsGameManagerOrReadOnly)
+    serializer_class = serializers.GameSerializer
+
+    def get_queryset(self):
+        team = get_object_or_404(models.Team, pk=self.kwargs.get('pk'))
+
+        return team.games.all()
+
+    def perform_create(self, serializer):
+        team = get_object_or_404(models.Team, pk=self.kwargs.get('pk'))
+
+        return serializer.save(team=team)
+
+
 class PlayerDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     destroy:

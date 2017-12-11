@@ -3,6 +3,17 @@ from rest_framework import serializers
 from ultimanager import models
 
 
+class GameSerializer(serializers.ModelSerializer):
+    """
+    Serializer for a game.
+    """
+
+    class Meta:
+        fields = ('id', 'team', 'opponent', 'starting_position')
+        model = models.Game
+        read_only_fields = ('team',)
+
+
 class PlayerSerializer(serializers.ModelSerializer):
     """
     Serializer for the `Player` model.

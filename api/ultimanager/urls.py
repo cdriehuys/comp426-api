@@ -11,13 +11,25 @@ router.register('teams', views.TeamViewSet, base_name='team')
 
 urlpatterns = [
     url(
+        r'^games/(?P<pk>[0-9]+)/$',
+        views.GameDetailView.as_view(),
+        name='game-detail'
+    ),
+
+    url(
         r'^players/(?P<pk>[0-9]+)/$',
         views.PlayerDetailView.as_view(),
         name='player-detail'
     ),
 
     url(
-        r'^teams/(?P<pk>[0-9]+)/players',
+        r'^teams/(?P<pk>[0-9]+)/games/$',
+        views.GameListView.as_view(),
+        name='game-list'
+    ),
+
+    url(
+        r'^teams/(?P<pk>[0-9]+)/players/$',
         views.PlayerListView.as_view(),
         name='player-list'
     ),
