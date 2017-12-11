@@ -123,6 +123,51 @@ class Point(models.Model):
             home=self.game.team.name)
 
 
+class Possession(models.Model):
+    """
+    A sequence of throws.
+    """
+    REASON_D = 'D'
+    REASON_PULL = 'P'
+    REASON_TURNOVER = 'T'
+
+    REASON_CHOICES = (
+        (REASON_D, 'Got a D'),
+        (REASON_PULL, 'Pulled to'),
+        (REASON_TURNOVER, 'Turnover')
+    )
+
+    # Fields
+    defensive_player = models.ForeignKey(
+        'ultimanager.Player',
+        blank=True,
+        help_text="The player who go the D to start the possession.",
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='defensive_possessions',
+        related_query_name='defensive_possession')
+    point = models.ForeignKey(
+        'ultimanager.Point',
+        help_text="The point the possession is a part of.",
+        on_delete=models.CASCADE,
+        related_name='possessions',
+        related_query_name='possession')
+    reason = models.CharField(
+        choices=REASON_CHOICES,
+        help_text="The reason the possession was started.",
+        max_length=1)
+
+    class Meta:
+        verbose_name = 'possession'
+        verbose_name_plural = 'possessions'
+
+    def __str__(self):
+        """
+        Get a string representation of the instance.
+        """
+        return "Possession in {point}".format(point=self.point)
+
+
 class Team(models.Model):
     """
     A team is a collection of players managed by a user. A team can play

@@ -32,6 +32,15 @@ class PointAdmin(admin.ModelAdmin):
     list_display = ('game', 'status', 'starting_position')
 
 
+@admin.register(models.Possession)
+class PossessionAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the `Possession` model.
+    """
+    fields = ('point', 'reason', 'defensive_player')
+    list_display = ('point', 'reason')
+
+
 @admin.register(models.Team)
 class TeamAdmin(admin.ModelAdmin):
     """
