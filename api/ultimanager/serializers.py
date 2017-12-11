@@ -32,6 +32,13 @@ class PointSerializer(serializers.ModelSerializer):
         read_only_fields = ('game',)
 
 
+class PossessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ('id', 'point', 'reason', 'defensive_player')
+        model = models.Possession
+        read_only_fields = ('point',)
+
+
 class TeamSerializer(serializers.ModelSerializer):
     """
     Serializer for the `Team` model.

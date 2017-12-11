@@ -35,6 +35,18 @@ urlpatterns = [
     ),
 
     url(
+        r'^points/(?P<pk>[0-9]+)/possessions/$',
+        views.PossessionListView.as_view(),
+        name='possession-list'
+    ),
+
+    url(
+        r'^possessions/(?P<pk>[0-9]+)/$',
+        views.PossessionDetailView.as_view(),
+        name='possession-detail'
+    ),
+
+    url(
         r'^teams/(?P<pk>[0-9]+)/games/$',
         views.GameListView.as_view(),
         name='game-list'
