@@ -197,3 +197,73 @@ class Team(models.Model):
         Get a string representation of the team.
         """
         return self.name
+
+
+class Throw(models.Model):
+    """
+    A throw from one player to another.
+    """
+    # Throw type constants
+    BACKHAND = 'B'
+    FOREHAND = 'F'
+    OTHER = 'O'
+
+    TYPE_CHOICES = (
+        (BACKHAND, 'Backhand'),
+        (FOREHAND, 'Forehand'),
+        (OTHER, 'Other'),
+    )
+
+    # Throw result constants
+    COMPLETION = 'C'
+    GOAL = 'G'
+    TURNOVER = 'T'
+
+    RESULT_CHOICES = (
+        (COMPLETION, 'Completion'),
+        (GOAL, 'Goal'),
+        (TURNOVER, 'Turnover')
+    )
+
+    # Fields
+    possession = models.ForeignKey(
+        'ultimanager.Possession',
+        help_text="The possession the throw is a part of.",
+        on_delete=models.CASCADE,
+        related_name='throws',
+        related_query_name='throw')
+    receiver = models.ForeignKey(
+        'ultimanager.Player',
+        help_text="The player who received the pass.",
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='received_throws',
+        related_query_name='received_throw')
+    result = models.CharField(
+        choices=RESULT_CHOICES,
+        help_text="The result of the throw.",
+        max_length=1)
+    throw_type = models.CharField(
+        choices=TYPE_CHOICES,
+        help_text="The type of the throw.",
+        max_length=1)
+    thrower = models.ForeignKey(
+        'ultimanager.Player',
+        help_text="The player who threw the pass.",
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='throws',
+        related_query_name='throw')
+
+    class Meta:
+        verbose_name = 'throw'
+        verbose_name_plural = 'throws'
+
+    def __str__(self):
+        """
+        Get a string representation of the instance.
+        """
+        return '{thrower} to {receiver} ({throw_type})'.format(
+            receiver=self.receiver,
+            throw_type=self.get_throw_type_display(),
+            thrower=self.thrower)

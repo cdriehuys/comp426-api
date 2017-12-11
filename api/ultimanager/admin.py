@@ -49,3 +49,12 @@ class TeamAdmin(admin.ModelAdmin):
     fields = ('name', 'user', 'image')
     list_display = ('name', 'user')
     search_fields = ('name',)
+
+
+@admin.register(models.Throw)
+class ThrowAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the `Throw` model.
+    """
+    fields = ('possession', 'thrower', 'receiver', 'throw_type', 'result')
+    list_display = ('possession', 'thrower', 'receiver', 'throw_type')
