@@ -52,3 +52,11 @@ class IsPlayerManagerOrReadOnly(permissions.BasePermission):
             return True
 
         return request.user == obj.team.user
+
+
+class IsPointManagerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return request.user == obj.game.team.user

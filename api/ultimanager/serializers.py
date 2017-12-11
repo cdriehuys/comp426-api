@@ -25,6 +25,13 @@ class PlayerSerializer(serializers.ModelSerializer):
         read_only_fields = ('team',)
 
 
+class PointSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ('id', 'game', 'players', 'starting_position', 'status')
+        model = models.Point
+        read_only_fields = ('game',)
+
+
 class TeamSerializer(serializers.ModelSerializer):
     """
     Serializer for the `Team` model.

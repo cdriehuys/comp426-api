@@ -17,9 +17,21 @@ urlpatterns = [
     ),
 
     url(
+        r'^games/(?P<pk>[0-9]+)/points/$',
+        views.PointListView.as_view(),
+        name='point-list'
+    ),
+
+    url(
         r'^players/(?P<pk>[0-9]+)/$',
         views.PlayerDetailView.as_view(),
         name='player-detail'
+    ),
+
+    url(
+        r'^points/(?P<pk>[0-9]+)/$',
+        views.PointDetailView.as_view(),
+        name='point-detail'
     ),
 
     url(

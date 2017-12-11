@@ -102,6 +102,34 @@ class PlayerListView(generics.ListCreateAPIView):
         return serializer.save(team=team)
 
 
+class PointDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsPointManagerOrReadOnly)
+    queryset = models.Point.objects.all()
+    serializer_class = serializers.PointSerializer
+
+
+class PointListView(generics.ListCreateAPIView):
+    filter_backends = (OrderingFilter,)
+    ordering = ('id',)
+    ordering_fields = ('id',)
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        permissions.IsPointManagerOrReadOnly)
+    serializer_class = serializers.PointSerializer
+
+    def get_queryset(self):
+        game = get_object_or_404(models.Game, pk=self.kwargs.get('pk'))
+
+        return game.points.all()
+
+    def perform_create(self, serializer):
+        game = get_object_or_404(models.Game, pk=self.kwargs.get('pk'))
+
+        return serializer.save(game=game)
+
+
 class TeamViewSet(viewsets.ModelViewSet):
     """
     Collection of views for managing a list of teams.
