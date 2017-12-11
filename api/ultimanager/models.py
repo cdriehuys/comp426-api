@@ -73,6 +73,52 @@ class Player(models.Model):
         """
         return self.name
 
+    @property
+    def num_completions(self):
+        return Throw.objects.exclude(
+            result=Throw.TURNOVER).filter(
+            thrower=self).count()
+
+    @property
+    def num_throws(self):
+        return Throw.objects.filter(thrower=self).count()
+
+    @property
+    def num_turns(self):
+        return Throw.objects.filter(
+            thrower=self,
+            result=Throw.TURNOVER).count()
+
+    @property
+    def num_points(self):
+        return Point.objects.filter(players=self).count()
+
+    @property
+    def num_games(self):
+        return Game.objects.filter(
+            point__players=self).count()
+
+    @property
+    def avg_completions_per_point(self):
+        if self.num_points == 0:
+            return 0
+
+        return self.num_completions / self.num_points
+
+    @property
+    def avg_points_per_game(self):
+        if self.num_games == 0:
+            return 0
+
+        return self.num_points / self.num_games
+
+    @property
+    def completion_percentage(self):
+        if self.num_throws == 0:
+            return 0
+
+        return self.num_completions / self.num_throws
+
 
 class Point(models.Model):
     """
